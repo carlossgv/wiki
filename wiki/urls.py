@@ -19,6 +19,8 @@ from encyclopedia import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include("encyclopedia.urls")),
-    path("wiki/<str:title>", views.entry)
+    path('wiki/', include("encyclopedia.urls")),
+    # path('wiki/results', views.results, name="results"),
+    path('wiki/<str:title>', views.entry, name="entry"),
+    # path('wiki/?q=<str:query>', views.search, name="search")
 ]
