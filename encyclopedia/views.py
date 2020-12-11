@@ -4,6 +4,8 @@ from . import util
 
 import markdown
 
+from django.contrib import messages
+
 
 def index(request):
     entries = util.list_entries()
@@ -64,3 +66,21 @@ def entry(request, title):
             "info": info
         })
 
+
+def new(request):
+    
+    entries = util.list_entries()
+    print(entries)
+
+    title = request.POST.get('title')
+    content = request.POST.get('content')
+
+    if title:
+        for entry in entries:
+            if title.lower() == entry.lower():
+                messages.error(request, 'Entry exists!')
+        
+        util.save_entry(title, content)
+
+
+    return render(request, "encyclopedia/new.html")

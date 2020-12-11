@@ -18,9 +18,9 @@ from django.urls import include, path
 from encyclopedia import views
 
 urlpatterns = [
+    # path("", views.index, name="index"),
     path('admin/', admin.site.urls),
     path('wiki/', include("encyclopedia.urls")),
-    # path('wiki/results', views.results, name="results"),
-    path('wiki/<str:title>', views.entry, name="entry"),
-    # path('wiki/?q=<str:query>', views.search, name="search")
+    path('wiki/new', views.new, name="new"),
+    path('wiki/<str:title>', views.entry, name="entry")    
 ]
