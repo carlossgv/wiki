@@ -21,6 +21,7 @@ urlpatterns = [
     # path("", views.index, name="index"),
     path('admin/', admin.site.urls),
     path('wiki/', include("encyclopedia.urls")),
+    path('wiki/edit<str:title>', views.edit, name="edit"),
     path('wiki/new', views.new, name="new"),
     path('wiki/<str:title>', views.entry, name="entry")    
 ]

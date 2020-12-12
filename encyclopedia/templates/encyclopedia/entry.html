@@ -6,6 +6,11 @@
 
 {% block body %}
 
-    {{ info | safe }}
+    {{ content | safe }}
+
+    <form style="display: inline" action="edit{{ title }}" method="get">
+        <button>Edit entry</button>
+    </form>
+    
 
 {% endblock %}

@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from . import util
 
-import markdown
+import markdown, random
 
 from django.contrib import messages
 
@@ -11,13 +11,14 @@ def index(request):
     entries = util.list_entries()
     query = request.GET.get('q','')
     results = []
+    randomEntry = random.choice(entries)
     
     if query:
         for entry in entries:
             if query.lower() == entry.lower():
                 return render(request, "encyclopedia/entry.html", {
                     "title": entry,
-                    "info": markdown.markdown(util.get_entry(entry))
+                    "content": markdown.markdown(util.get_entry(entry))
                 })
             else:
                 if query.lower() in entry.lower():
@@ -29,7 +30,8 @@ def index(request):
 
     else:
         return render(request, "encyclopedia/index.html", {
-            "entries": util.list_entries()
+            "entries": util.list_entries(),
+            "randomEntry": randomEntry
         })
 
 
@@ -37,13 +39,14 @@ def entry(request, title):
     entries = util.list_entries()
     query = request.GET.get('q','')
     results = []
+    randomEntry = random.choice(entries)
     
     if query:
         for entry in entries:
             if query.lower() == entry.lower():
                 return render(request, "encyclopedia/entry.html", {
                     "title": entry,
-                    "info": markdown.markdown(util.get_entry(entry))
+                    "content": markdown.markdown(util.get_entry(entry))
                 })
             else:
                 if query.lower() in entry.lower():
@@ -54,33 +57,57 @@ def entry(request, title):
         })
 
     else:
-        info = util.get_entry(title)
+        content = util.get_entry(title)
 
-        if info == None: 
-            info = "File Not Found"
+        if content == None: 
+            content = "File Not Found"
         else:
-            info = markdown.markdown(info)
+            content = markdown.markdown(content)
         
         return render(request, "encyclopedia/entry.html", {
             "title": title,
-            "info": info
+            "content": content,
+            "randomEntry": randomEntry
         })
 
 
 def new(request):
-    
     entries = util.list_entries()
-    print(entries)
+    randomEntry = random.choice(entries)
 
-    title = request.POST.get('title')
-    content = request.POST.get('content')
-
-    if title:
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
         for entry in entries:
             if title.lower() == entry.lower():
                 messages.error(request, 'Entry exists!')
         
         util.save_entry(title, content)
 
+        return redirect(f"/wiki/{title}", {
+            "title": title,
+            "content": content
+        })
 
-    return render(request, "encyclopedia/new.html")
+    elif request.method == 'GET':
+        return render(request, "encyclopedia/new.html", {
+            "randomEntry": randomEntry
+        })
+
+def edit(request, title):
+    if request.method == "GET":    
+        content = util.get_entry(title)
+            
+        return render(request, "encyclopedia/edit.html", {
+            "title": title,
+            "content": content
+        })
+
+    elif request.method == "POST":
+        content = request.POST.get('content')
+        util.save_entry(title, content)
+
+        return redirect(f"/wiki/{title}", {
+            "title": title,
+            "content": content
+        })
