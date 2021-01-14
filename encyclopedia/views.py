@@ -19,7 +19,7 @@ def index(request):
                 return render(request, "encyclopedia/entry.html", {
                     "title": entry,
                     "content": markdown.markdown(util.get_entry(entry)),
-                    "test": 'Cambio de prueba'
+                    "prueba": 'Cambio de prueba'
                 })
             else:
                 if query.lower() in entry.lower():
