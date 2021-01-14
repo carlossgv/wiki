@@ -3,6 +3,8 @@
 import os
 import sys
 
+# COMENTARIO GITHUB COLABORATIVO ERICK
+
 
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'wiki.settings')
